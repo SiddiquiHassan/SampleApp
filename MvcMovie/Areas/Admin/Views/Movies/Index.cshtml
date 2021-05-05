@@ -1,0 +1,130 @@
+﻿@model IEnumerable<MvcMovie.Areas.Admin.Models.Movie>
+
+@{
+    ViewData["Title"] = "Index";
+}
+
+<h1>Index</h1>
+
+<p>
+    <a asp-action="create">create new</a>
+</p>
+<table class="table" id="grid">
+    <thead>
+        <tr>
+            <th>
+                @Html.DisplayNameFor(model => model.Title)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.ReleaseDate)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Genre)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Price)
+            </th>
+            <th></th>
+        </tr>
+    </thead>
+    <tbody>
+@foreach (var item in Model) {
+        <tr>
+            <td>
+                @Html.DisplayFor(modelitem => item.Title)
+            </td>
+            <td>
+                @Html.DisplayFor(modelitem => item.ReleaseDate)
+            </td>
+            <td>
+                @Html.DisplayFor(modelitem => item.Genre)
+            </td>
+            <td>
+                @Html.DisplayFor(modelitem => item.Price)
+            </td>
+            <td>
+                <a asp-action="delete" asp-route-id="@item.Id">delete</a>
+            </td>
+        </tr>
+}
+    </tbody>
+</table>
+
+
+<script>
+
+    $(function () {
+        $("#grid").kendogrid({
+            sortable: true,
+            filterable: true,
+            pageable: {
+                input: true,
+                numeric: false
+            }
+        });
+    });
+
+</script>
+
+
+@*<script>
+    $(document).ready(function () {
+        var crudServiceBaseUrl = "/Admin/Manager",
+            dataSource = new kendo.data.DataSource({
+                transport: {
+                    read: {
+                        url: crudServiceBaseUrl + "/List",
+                        dataType: "json"
+                    },
+                    update: {
+                        url: crudServiceBaseUrl + "/Products/Update",
+                        dataType: "json"
+                    },
+                    destroy: {
+                        url: crudServiceBaseUrl + "/Products/Destroy",
+                        dataType: "json"
+                    },
+                    create: {
+                        url: crudServiceBaseUrl + "/Products/Create",
+                        dataType: "json"
+                    },
+                    parameterMap: function (options, operation) {
+                        if (operation !== "read" && options.models) {
+                            return { models: kendo.stringify(options.models) };
+                        }
+                    }
+                },
+                batch: true,
+                schema: {
+                    model: {
+                        id: "Id",
+                        fields: {
+                            Id: { editable: false, nullable: true },
+                            Title: { validation: { required: true } },
+                            Genre: { validation: { required: true } },
+                            Price: { type: "number" },
+                            ReleaseDate: { type: "date" }
+                        }
+                    }
+                }
+            });
+
+        $("#grid").kendoGrid({
+            dataSource: dataSource,
+            pageable: true,
+            height: 550,
+            toolbar: ["create"],
+            columns: [
+                "title",
+                { field: "genre", title: "Genre", width: "120px" },
+                { field: "price", title: "Price", width: "120px" },
+                { field: "releaseDate", title: "Relese Date", width: "120px" },
+                { command: ["edit", "destroy"], title: "&nbsp;", width: "250px" }],
+            editable: "inline"
+        });
+    });
+
+    //function customBoolEditor(container, options) {
+    //    $('<input class="k-checkbox" type="checkbox" name="Discontinued" data-type="boolean" data-bind="checked:Discontinued">').appendTo(container);
+    //}
+</script>*@

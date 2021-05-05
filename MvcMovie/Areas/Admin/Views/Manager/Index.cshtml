@@ -1,0 +1,161 @@
+﻿@model IEnumerable<MvcMovie.Areas.Admin.Models.Movie>
+@{
+    Layout = "~/Views/Shared/_Layout.cshtml";
+    ViewData["Title"] = "Admin Panel";
+}
+
+
+<style>
+    #grid table tr td {
+        font-family: "Times New Roman", Times, serif;
+        font-style: italic;
+        font-size: 14px;
+    }
+</style>
+
+<div id="grid"></div>
+<div id="result"></div>
+
+@*<input id="input" />*@
+
+@*<script>
+        const arr = ['abc', 'xyz', '123', '789'];
+        $('#input').testMethod();
+    </script>*@
+
+@*<table class="table table-bordered">
+        <thead>
+            <tr>
+                <th>Id</th>
+                <th>Title</th>
+                <th>Genre</th>
+                <th>Release Date</th>
+                <th>Price</th>
+                <th colspan="2"></th>
+            </tr>
+        </thead>
+
+        <tbody>
+            @foreach (var item in Model)
+            {
+                <tr>
+                    <td>@item.Id</td>
+                    <td>@item.Title</td>
+                    <td>@item.Genre</td>
+                    <td>@item.ReleaseDate</td>
+                    <td>@item.Price</td>
+                    <td><a asp-area="Admin" asp-controller="Manager" asp-action="Edit" asp-route-id="@item.Id">Edit</a></td>
+                    <td><a asp-area="Admin" asp-controller="Manager" asp-action="Delete">Delete</a></td>
+
+                </tr>
+            }
+        </tbody>
+
+    </table>
+
+
+    <p>
+        Hello <a href="https://docs.telerik.com/kendo-ui/intro/first-steps">Kendo UI for jQuery</a>!
+        This is version <strong id="kendoVersion"></strong>.
+    </p>*@
+
+
+<input id="comboBox" style="width:100%" />
+
+<input type="button" id="btnRender" value="Load Combobox" class="btn btn-primary" />
+
+<script>
+    $(document).ready(function () {
+
+        $("#btnRender").click(function () {
+
+            var config = {
+                url: "/Admin/Manager/List",
+                valueField: "id",
+                textField: "title",
+                placeHolder: "Select movie name.."
+            };
+
+            $("#comboBox").dynamicCombo(config);
+        });
+
+        //$("#btnRender").click(function () {
+        //    $("#comboBox").kendoComboBox({
+        //        filter: "contains",
+        //        placeholder: "Select category...",
+        //        dataTextField: "title",
+        //        dataValueField: "id",
+        //        dataSource: {
+        //            transport: {
+        //                read: {
+        //                    dataType: "json",
+        //                    url: "/Admin/Manager/List"
+        //                }
+        //            }
+        //        }
+        //    });
+        //});
+    });
+</script>
+
+<script>
+        $(document).ready(function () {
+            var crudServiceBaseUrl = "/Admin/Manager",
+                dataSource = new kendo.data.DataSource({
+                    transport: {
+                        read: {
+                            url: crudServiceBaseUrl + "/List",
+                            dataType: "json"
+                        },
+                        update: {
+                            url: crudServiceBaseUrl + "/Products/Update",
+                            dataType: "json"
+                        },
+                        destroy: {
+                            url: crudServiceBaseUrl + "/Products/Destroy",
+                            dataType: "json"
+                        },
+                        create: {
+                            url: crudServiceBaseUrl + "/Products/Create",
+                            dataType: "json"
+                        },
+                        parameterMap: function (options, operation) {
+                            if (operation !== "read" && options.models) {
+                                return { models: kendo.stringify(options.models) };
+                            }
+                        }
+                    },
+                    batch: true,
+                    schema: {
+                        model: {
+                            id: "Id",
+                            fields: {
+                                Id: { editable: false, nullable: true },
+                                Title: { validation: { required: true } },
+                                Genre: { validation: { required: true } },
+                                Price: { type: "number" },
+                                ReleaseDate: { type: "date" }
+                                }
+                            }
+                        }
+                    });
+
+            $("#grid").kendoGrid({
+                dataSource: dataSource,
+                pageable: true,
+                height: 550,
+                toolbar: ["create"],
+                columns: [
+                    "title",
+                    { field: "genre", title: "Genre", width: "120px" },
+                    { field: "price", title: "Price", width: "120px" },
+                    { field: "releaseDate", title: "Relese Date", width: "120px" },
+                    { command: ["edit", "destroy"], title: "&nbsp;", width: "250px" }],
+                editable: "inline"
+            });
+        });
+
+        //function customBoolEditor(container, options) {
+        //    $('<input class="k-checkbox" type="checkbox" name="Discontinued" data-type="boolean" data-bind="checked:Discontinued">').appendTo(container);
+        //}
+    </script>
